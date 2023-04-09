@@ -3,7 +3,7 @@ package store
 import (
 	"database/sql"
 
-	headerFile "github.com/Arun4rangan/api-ShopScaner/headerFile"
+	headerFile "github.com/SooryR/api-ShopScaner/headerFile"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/gommon/log"

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"strings"
 
-	rfrl "github.com/Arun4rangan/api-rfrl/rfrl"
+	headerFile "github.com/SooryR/api-ShopScaner/headerFile"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"gopkg.in/guregu/null.v4"
@@ -13,9 +13,9 @@ import (
 // ClientUseCase holds all business related functions for client
 type ClientUseCase struct {
 	db           *sqlx.DB
-	clientStore  rfrl.ClientStore
-	emailer      rfrl.EmailerUseCase
-	authStore    rfrl.AuthStore
-	fireStore    rfrl.FireStoreClient
-	companyStore rfrl.CompanyStore
+	clientStore  headerFile.ClientStore
+	emailer      headerFile.EmailerUseCase
+	authStore    headerFile.AuthStore
+	fireStore    headerFile.FireStoreClient
+	companyStore headerFile.CompanyStore
 }

@@ -4,7 +4,7 @@ import (
 	"crypto/rsa"
 	"database/sql"
 
-	headerFile "github.com/Arun4rangan/api-ShopScaner/headerFile"
+	headerFile "github.com/SooryR/api-ShopScaner/headerFile"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -15,17 +15,17 @@ import (
 // AuthUseCase holds all business related functions for auth
 type AuthUseCase struct {
 	db          *sqlx.DB
-	authStore   rfrl.AuthStore
-	clientStore rfrl.ClientStore
-	fireStore   rfrl.FireStoreClient
+	authStore   headerFile.AuthStore
+	clientStore headerFile.ClientStore
+	fireStore   headerFile.FireStoreClient
 }
 
 // NewAuthUseCase creates new AuthUseCase
 func NewAuthUseCase(
 	db sqlx.DB,
-	authStore rfrl.AuthStore,
-	clientStore rfrl.ClientStore,
-	fireStore rfrl.FireStoreClient,
+	authStore headerFile.AuthStore,
+	clientStore headerFile.ClientStore,
+	fireStore headerFile.FireStoreClient,
 ) *AuthUseCase {
 	return &AuthUseCase{&db, authStore, clientStore, fireStore}
 }
@@ -41,15 +41,15 @@ func (au *AuthUseCase) SignupEmail(
 	photo string,
 	about string,
 	isTutor null.Bool,
-) (*rfrl.Client, *rfrl.Auth, error) {
+) (*headerFile.Client, *headerFile.Auth, error) {
 	hash, hashError := hashAndSalt([]byte(password))
 
 	if hashError != nil {
 		return nil, nil, errors.Wrap(hashError, "SignupEmail")
 	}
 
-	newClient := rfrl.NewClient(firstName, lastName, about, email, photo, isTutor, "", "", null.Int{}, "")
-	auth := rfrl.Auth{
+	newClient := headerFile.NewClient(firstName, lastName, about, email, photo, isTutor, "", "", null.Int{}, "")
+	auth := headerFile.Auth{
 		Email:        null.StringFrom(email),
 		PasswordHash: hash,
 	}
@@ -63,9 +63,9 @@ func (au *AuthUseCase) SignupEmail(
 		return nil, nil, errors.Wrap(*err, "SignupWithToken")
 	}
 
-	defer rfrl.HandleTransactions(tx, err)
+	defer headerFile.HandleTransactions(tx, err)
 
-	var createdClient *rfrl.Client
+	var createdClient *headerFile.Client
 
 	createdClient, *err = au.clientStore.CreateClient(tx, newClient)
 
@@ -73,7 +73,7 @@ func (au *AuthUseCase) SignupEmail(
 		return nil, nil, *err
 	}
 
-	var createdAuth *rfrl.Auth
+	var createdAuth *headerFile.Auth
 	createdAuth, *err = au.authStore.CreateWithEmail(tx, &auth, createdClient.ID)
 
 	if *err != nil {
@@ -99,7 +99,7 @@ func (au *AuthUseCase) SignupEmail(
 }
 
 // LoginEmail allows user to login with email by checking password hash against the has the passed in
-func (au *AuthUseCase) LoginEmail(email string, password string) (*rfrl.Client, *rfrl.Auth, error) {
+func (au *AuthUseCase) LoginEmail(email string, password string) (*headerFile.Client, *headerFile.Auth, error) {
 	c, auth, err := au.authStore.GetByEmail(au.db, email)
 
 	if err != nil {

@@ -1,7 +1,7 @@
 package store
 
 import (
-	headerFile "github.com/Arun4rangan/api-ShopScaner/headerFile"
+	headerFile "github.com/SooryR/api-ShopScaner/headerFile"
 	"github.com/pkg/errors"
 	"gopkg.in/guregu/null.v4"
 )
@@ -13,9 +13,9 @@ RETURNING *
 	`
 
 // CreateWithEmail creates auth row with email in db
-func (au *AuthStore) CreateWithEmail(db rfrl.DB, auth *rfrl.Auth, clientID string) (*rfrl.Auth, error) {
-	var createdAuth rfrl.Auth
-	row := db.QueryRowx(insertEmailAuth, auth.Email, auth.PasswordHash, rfrl.EMAIL, clientID)
+func (au *AuthStore) CreateWithEmail(db headerFile.DB, auth *headerFile.Auth, clientID string) (*headerFile.Auth, error) {
+	var createdAuth headerFile.Auth
+	row := db.QueryRowx(insertEmailAuth, auth.Email, auth.PasswordHash, headerFile.EMAIL, clientID)
 
 	err := row.StructScan(&createdAuth)
 
